@@ -10,8 +10,11 @@ from rest_framework.permissions import IsAuthenticated
 from ad.models import Ad, Selection
 from ad.permissions import SelectionActionsPermission, AdActionsPermission
 from ad.serializers import AdSerializer, AdCreateSerializer, AdUpdateSerializer, SelectionListSerializer, \
-	SelectionDetailSerializer, SelectionCreateSerializer, SelectionUpdateSerializer, SelectionDestroySerializer
-from user.serializers import UserDestroySerializer
+	SelectionDetailSerializer, SelectionCreateSerializer, SelectionUpdateSerializer, SelectionDestroySerializer, \
+	AdDestroySerializer
+
+
+# from user.serializers import UserDestroySerializer
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -69,7 +72,7 @@ class AdUpdateView(UpdateAPIView):
 
 class AdDeleteView(DestroyAPIView):
 	queryset = Ad.objects.all()
-	serializer_class = UserDestroySerializer
+	serializer_class = AdDestroySerializer
 	permission_classes = [IsAuthenticated, AdActionsPermission]
 
 
