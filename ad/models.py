@@ -3,35 +3,34 @@ from django.db import models
 from django.db.models import CASCADE
 
 from category.models import Category
-from user.models import User
+from users.models import User
 
 
 class Ad(models.Model):
-	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50, validators=[MinLengthValidator(10)])
+	title = models.CharField(max_length=50, null=True)
 	author = models.ForeignKey(User, on_delete=CASCADE)
 	price = models.PositiveIntegerField()
 	description = models.TextField(max_length=1000, null=True)
-	is_published = models.BooleanField()
-	image = models.ImageField(upload_to='images/')
-	category = models.ForeignKey(Category, on_delete=CASCADE, null=True, blank=True)
+	created_at = models.DateTimeField(null=True)
 
 	class Meta:
 		verbose_name = 'Объявление'
 		verbose_name_plural = 'Объявления'
+		ordering = ['-created_at']
 
 	def __str__(self):
-		return self.name
+		return self.title
 
 
-class Selection(models.Model):
-	name = models.CharField(max_length=50)
-	owner = models.ForeignKey(User, on_delete=models.CASCADE)
-	items = models.ManyToManyField(Ad)
+class Comment(models.Model):
+	text = models.CharField(max_length=1000)
+	author = models.ForeignKey(User, on_delete=CASCADE)
+	ad = models.ForeignKey(Ad, on_delete=CASCADE)
+	created_at = models.DateTimeField()
 
 	class Meta:
-		verbose_name = 'Подборка'
-		verbose_name_plural = 'Подборки'
+		verbose_name = 'Отзыв'
+		verbose_name_plural = 'Отзывы'
 
 	def __str__(self):
-		return self.name
+		return self.text

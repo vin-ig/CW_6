@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 	'rest_framework_simplejwt',
 	'ad',
 	'category',
-	'user',
+	'users',
 	'drf_spectacular',
 	'corsheaders',
 ]
@@ -150,7 +150,7 @@ SPECTACULAR_SETTINGS = {
 	'VERSION': '1.0.0'
 }
 
-AUTH_USER_MODEL = 'user.User'
+AUTH_USER_MODEL = 'users.User'
 
 DJOSER = {
     'SERIALIZERS': {

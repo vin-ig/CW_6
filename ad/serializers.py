@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from category.models import Category
-from ad.models import Ad, Category, Selection
-from user.models import User
+from ad.models import Ad, Category
+from users.models import User
 
 
 class IsPublishedValidator:
@@ -83,44 +83,44 @@ class AdDestroySerializer(serializers.ModelSerializer):
 		fields = ['id']
 
 
-class SelectionListSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Selection
-		fields = ['id', 'name']
-
-
-class SelectionDetailSerializer(serializers.ModelSerializer):
-	owner = serializers.SlugRelatedField(
-		read_only=True,
-		slug_field='username'
-	)
-	items = AdSerializer(
-		read_only=True,
-		many=True
-	)
-
-	class Meta:
-		model = Selection
-		fields = '__all__'
-
-
-class SelectionCreateSerializer(serializers.ModelSerializer):
-	id = serializers.IntegerField(read_only=True)
-
-	class Meta:
-		model = Selection
-		fields = '__all__'
-
-
-class SelectionUpdateSerializer(serializers.ModelSerializer):
-	id = serializers.IntegerField(read_only=True)
-
-	class Meta:
-		model = Selection
-		fields = '__all__'
-
-
-class SelectionDestroySerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Selection
-		fields = ['id']
+# class SelectionListSerializer(serializers.ModelSerializer):
+# 	class Meta:
+# 		model = Selection
+# 		fields = ['id', 'name']
+#
+#
+# class SelectionDetailSerializer(serializers.ModelSerializer):
+# 	owner = serializers.SlugRelatedField(
+# 		read_only=True,
+# 		slug_field='username'
+# 	)
+# 	items = AdSerializer(
+# 		read_only=True,
+# 		many=True
+# 	)
+#
+# 	class Meta:
+# 		model = Selection
+# 		fields = '__all__'
+#
+#
+# class SelectionCreateSerializer(serializers.ModelSerializer):
+# 	id = serializers.IntegerField(read_only=True)
+#
+# 	class Meta:
+# 		model = Selection
+# 		fields = '__all__'
+#
+#
+# class SelectionUpdateSerializer(serializers.ModelSerializer):
+# 	id = serializers.IntegerField(read_only=True)
+#
+# 	class Meta:
+# 		model = Selection
+# 		fields = '__all__'
+#
+#
+# class SelectionDestroySerializer(serializers.ModelSerializer):
+# 	class Meta:
+# 		model = Selection
+# 		fields = ['id']

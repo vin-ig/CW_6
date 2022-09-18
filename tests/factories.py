@@ -1,7 +1,7 @@
 import factory.django
 
 from ad.models import Ad, Selection
-from user.models import User
+from users.models import User
 
 
 class UserFactory(factory.django.DjangoModelFactory):

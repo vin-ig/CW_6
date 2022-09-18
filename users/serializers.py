@@ -1,3 +1,38 @@
+from djoser.serializers import UserCreateSerializer as BaseUserRegistrationSerializer
+from rest_framework import serializers
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class UserRegistrationSerializer(BaseUserRegistrationSerializer):
+	id = serializers.IntegerField(read_only=True)
+
+	class Meta:
+		model = User
+		# exclude = ['password']
+		fields = '__all__'
+
+	# def is_valid(self, raise_exception=False):
+	# 	self._location = self.initial_data.pop('location', None)
+	# 	return super().is_valid(raise_exception=raise_exception)
+
+	def create(self, validated_data):
+		user = User.objects.create(**validated_data)
+		user.set_password(user.password)
+		# if self._location:
+		# 	location_obj = Location.objects.get_or_create(name=self._location)[0]
+		# 	user.location = location_obj
+		user.save()
+		return user
+
+
+class CurrentUserSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		exclude = ['password']
+
+
 # from datetime import date
 #
 # from rest_framework import serializers

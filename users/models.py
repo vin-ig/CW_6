@@ -17,7 +17,7 @@ class UserManager(BaseUserManager):
 	функция создания пользователя — в нее мы передаем обязательные поля
 	"""
 
-	def create_user(self, email, first_name, last_name, phone, password=None):
+	def create_user(self, email, first_name, last_name, phone, role, password=None):
 		if not email:
 			raise ValueError('Users must have an email address')
 		user = self.model(
@@ -25,7 +25,7 @@ class UserManager(BaseUserManager):
 			first_name=first_name,
 			last_name=last_name,
 			phone=phone,
-			role="user"
+			role=role,
 		)
 		user.is_active = True
 		user.set_password(password)
@@ -33,7 +33,7 @@ class UserManager(BaseUserManager):
 
 		return user
 
-	def create_superuser(self, email, first_name, last_name, phone, password=None):
+	def create_superuser(self, email, first_name, last_name, phone, role, password=None):
 		"""
 		функция для создания суперпользователя — с ее помощью мы создаем админинстратора
 		это можно сделать с помощью команды createsuperuser
@@ -45,7 +45,7 @@ class UserManager(BaseUserManager):
 			last_name=last_name,
 			phone=phone,
 			password=password,
-			role="admin"
+			role=role
 		)
 
 		user.save(using=self._db)
@@ -54,13 +54,16 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
 	ROLES = [
-		(UserRoles.USER, 'Пользователь'),
-		(UserRoles.ADMIN, 'Администратор'),
+		(UserRoles.USER.value, 'Пользователь'),
+		(UserRoles.ADMIN.value, 'Администратор'),
 	]
 
 	role = models.CharField(max_length=9, choices=ROLES)
 	email = models.EmailField(unique=True)
 	phone = models.CharField(max_length=11)
+	first_name = models.CharField(max_length=50, blank=True)
+	last_name = models.CharField(max_length=50, blank=True)
+	image = models.ImageField(upload_to='images/', blank=True, null=True)
 
 	@property
 	def is_superuser(self):
@@ -82,11 +85,11 @@ class User(AbstractBaseUser):
 
 	@property
 	def is_admin(self):
-		return self.role == UserRoles.ADMIN
+		return self.role == UserRoles.ADMIN.value
 
 	@property
 	def is_user(self):
-		return self.role == UserRoles.USER
+		return self.role == UserRoles.USER.value
 
 
 # def check_email_domain(email):

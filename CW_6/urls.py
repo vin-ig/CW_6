@@ -18,13 +18,13 @@ urlpatterns = [
 	# path('', ad.views.IndexView.as_view()),
 	path('ad/', include('ad.urls')),
 	path('cat/', include('category.urls')),
-	# path('user/', include('user.urls')),
+	# path('users/', include('users.urls')),
 
-	path('selection/', views.SelectionListView.as_view(), name='selection_list'),
-	path('selection/<int:pk>/', views.SelectionDetailView.as_view(), name='selection_detail'),
-	path('selection/create/', views.SelectionCreateView.as_view(), name='selection_create'),
-	path('selection/<int:pk>/update/', views.SelectionUpdateView.as_view(), name='selection_update'),
-	path('selection/<int:pk>/delete/', views.SelectionDestroyView.as_view(), name='selection_delete'),
+	# path('selection/', views.SelectionListView.as_view(), name='selection_list'),
+	# path('selection/<int:pk>/', views.SelectionDetailView.as_view(), name='selection_detail'),
+	# path('selection/create/', views.SelectionCreateView.as_view(), name='selection_create'),
+	# path('selection/<int:pk>/update/', views.SelectionUpdateView.as_view(), name='selection_update'),
+	# path('selection/<int:pk>/delete/', views.SelectionDestroyView.as_view(), name='selection_delete'),
 
 	path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 	path('api/schema/swagger-ui', SpectacularSwaggerView.as_view(url_name='schema')),
@@ -38,4 +38,6 @@ users_router = SimpleRouter()
 users_router.register("users", UserViewSet, basename="users")
 urlpatterns += [
     path('', include(users_router.urls)),
+	path('token/', TokenObtainPairView.as_view()),
+	path('token/refresh/', TokenRefreshView.as_view()),
 ]

@@ -7,11 +7,14 @@ from django.http import JsonResponse
 from django.views.generic import UpdateView
 from rest_framework.permissions import IsAuthenticated
 
-from ad.models import Ad, Selection
-from ad.permissions import SelectionActionsPermission, AdActionsPermission
-from ad.serializers import AdSerializer, AdCreateSerializer, AdUpdateSerializer, SelectionListSerializer, \
-	SelectionDetailSerializer, SelectionCreateSerializer, SelectionUpdateSerializer, SelectionDestroySerializer, \
-	AdDestroySerializer
+from ad.models import Ad, Comment
+from ad.permissions import AdActionsPermission
+from ad.serializers import AdSerializer, AdCreateSerializer, AdUpdateSerializer, AdDestroySerializer
+
+
+#, SelectionListSerializer, \
+	# SelectionDetailSerializer, SelectionCreateSerializer, SelectionUpdateSerializer, SelectionDestroySerializer, \
+	# AdDestroySerializer
 
 
 # from user.serializers import UserDestroySerializer
@@ -94,33 +97,3 @@ def upload_image(request, pk):
 		'is_published': ad.is_published,
 		'category': ad.category.name,
 	}, safe=False)
-
-
-# Подборки
-
-class SelectionListView(ListAPIView):
-	queryset = Selection.objects.all()
-	serializer_class = SelectionListSerializer
-
-
-class SelectionDetailView(RetrieveAPIView):
-	queryset = Selection.objects.all()
-	serializer_class = SelectionDetailSerializer
-
-
-class SelectionCreateView(CreateAPIView):
-	queryset = Selection.objects.all()
-	serializer_class = SelectionCreateSerializer
-	permission_classes = [IsAuthenticated]
-
-
-class SelectionUpdateView(UpdateAPIView):
-	queryset = Selection.objects.all()
-	serializer_class = SelectionUpdateSerializer
-	permission_classes = [IsAuthenticated, SelectionActionsPermission]
-
-
-class SelectionDestroyView(DestroyAPIView):
-	queryset = Selection.objects.all()
-	serializer_class = SelectionDestroySerializer
-	permission_classes = [IsAuthenticated, SelectionActionsPermission]
