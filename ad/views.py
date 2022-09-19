@@ -9,7 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from ad.models import Ad, Comment
 from ad.permissions import AdActionsPermission
-from ad.serializers import AdSerializer, AdCreateSerializer, AdUpdateSerializer, AdDestroySerializer
+from ad.serializers import AdListSerializer, AdCreateSerializer, AdUpdateSerializer, AdDestroySerializer, \
+	AdDetailSerializer
 
 
 #, SelectionListSerializer, \
@@ -28,7 +29,7 @@ class IndexView(View):
 
 class AdListView(ListAPIView):
 	queryset = Ad.objects.all()
-	serializer_class = AdSerializer
+	serializer_class = AdListSerializer
 
 	def get(self, request, *args, **kwargs):
 		# Фильтр по категории
@@ -58,13 +59,14 @@ class AdListView(ListAPIView):
 
 class AdDetailView(RetrieveAPIView):
 	queryset = Ad.objects.all()
-	serializer_class = AdSerializer
-	permission_classes = [IsAuthenticated]
+	serializer_class = AdDetailSerializer
+	# permission_classes = [IsAuthenticated]
 
 
 class AdCreateView(CreateAPIView):
 	queryset = Ad.objects.all()
 	serializer_class = AdCreateSerializer
+	permission_classes = [IsAuthenticated]
 
 
 class AdUpdateView(UpdateAPIView):

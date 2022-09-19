@@ -2,16 +2,16 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models import CASCADE
 
-from category.models import Category
 from users.models import User
 
 
 class Ad(models.Model):
-	title = models.CharField(max_length=50, null=True)
+	title = models.CharField(max_length=200, null=True)
 	author = models.ForeignKey(User, on_delete=CASCADE)
 	price = models.PositiveIntegerField()
 	description = models.TextField(max_length=1000, null=True)
 	created_at = models.DateTimeField(null=True)
+	image = models.ImageField(upload_to='ad_images/', blank=True, null=True)
 
 	class Meta:
 		verbose_name = 'Объявление'

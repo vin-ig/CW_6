@@ -8,5 +8,5 @@ ___
 ```
 docker-compose up -d
 ./manage.py migrate
-./manage.py loaddata fixtures/ad.json fixtures/category.json fixtures/location.json fixtures/user.json
+python ./manage.py loaddata fixtures/ad.json fixtures/comments.json fixtures/users.json
 ```

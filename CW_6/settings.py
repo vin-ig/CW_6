@@ -39,8 +39,8 @@ INSTALLED_APPS = [
 	'rest_framework',
 	'rest_framework_simplejwt',
 	'ad',
-	'category',
 	'users',
+	'redoc',
 	'drf_spectacular',
 	'corsheaders',
 ]
@@ -133,11 +133,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-TOTAL_ON_PAGE = 5
+TOTAL_ON_PAGE = 4
 
 REST_FRAMEWORK = {
 	'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-	'PAGE_SIZE': 5,
+	'PAGE_SIZE': 4,
 	'DEFAULT_AUTHENTICATION_CLASSES': [
 		'rest_framework_simplejwt.authentication.JWTAuthentication'
 	],

@@ -15,9 +15,10 @@ from ad import views
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
+	path('api/api/ads/', include('ad.urls')),
+
 	# path('', ad.views.IndexView.as_view()),
-	path('ad/', include('ad.urls')),
-	path('cat/', include('category.urls')),
+	# path('cat/', include('category.urls')),
 	# path('users/', include('users.urls')),
 
 	# path('selection/', views.SelectionListView.as_view(), name='selection_list'),
@@ -28,6 +29,8 @@ urlpatterns = [
 
 	path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 	path('api/schema/swagger-ui', SpectacularSwaggerView.as_view(url_name='schema')),
+	path("api/redoc-tasks/", include("redoc.urls")),
+
 ]
 
 if settings.DEBUG:
@@ -35,7 +38,7 @@ if settings.DEBUG:
 
 
 users_router = SimpleRouter()
-users_router.register("users", UserViewSet, basename="users")
+users_router.register("api/api/users", UserViewSet, basename="users")
 urlpatterns += [
     path('', include(users_router.urls)),
 	path('token/', TokenObtainPairView.as_view()),

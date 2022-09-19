@@ -60,10 +60,11 @@ class User(AbstractBaseUser):
 
 	role = models.CharField(max_length=9, choices=ROLES)
 	email = models.EmailField(unique=True)
-	phone = models.CharField(max_length=11)
+	phone = models.CharField(max_length=12)
 	first_name = models.CharField(max_length=50, blank=True)
 	last_name = models.CharField(max_length=50, blank=True)
-	image = models.ImageField(upload_to='images/', blank=True, null=True)
+	image = models.ImageField(upload_to='user_images/', blank=True, null=True)
+	is_active = models.BooleanField(blank=True, null=True)
 
 	@property
 	def is_superuser(self):
