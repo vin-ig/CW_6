@@ -39,26 +39,48 @@ class AdDetailSerializer(serializers.ModelSerializer):
 class AdCreateSerializer(serializers.ModelSerializer):
 	pk = serializers.IntegerField(read_only=True)
 	price = serializers.IntegerField(required=True)
-	phone = serializers.SlugRelatedField(
-		required=False,
-		slug_field='phone',
-		queryset=User.objects.all(),
-	)
-	author_first_name = serializers.SlugRelatedField(
-		required=False,
-		slug_field='first_name',
-		queryset=User.objects.all(),
-	)
-	author_last_name = serializers.SlugRelatedField(
-		required=False,
-		slug_field='last_name',
-		queryset=User.objects.all(),
-	)
-	author_id = serializers.SlugRelatedField(
-		required=False,
-		slug_field='id',
-		queryset=User.objects.all(),
-	)
+	phone = serializers.CharField(source='author.phone', required=False)
+	author_first_name = serializers.CharField(source='author.first_name', required=False)
+	author_last_name = serializers.CharField(source='author.last_name', required=False)
+
+	class Meta:
+		model = Ad
+		fields = [
+			'pk',
+			'image',
+			'title',
+			'price',
+			'description',
+			'phone',
+			'author_first_name',
+			'author_last_name',
+			'author_id',
+		]
+
+	# def create(self, validated_data):
+	# 	print(validated_data)
+
+
+	# def is_valid(self, raise_exception=False):
+	# 	self._user = self.initial_data.pop('user', None)
+	# 	print(self.get_initial())
+	# 	return super().is_valid(raise_exception=raise_exception)
+
+	# def create(self, validated_data):
+	# 	ad = Ad.objects.create(**validated_data)
+	# 	if self._category:
+	# 		category_obj = Category.objects.get_or_create(name=self._category)[0]
+	# 		ad.category = category_obj
+	# 		ad.save()
+	# 	ad.save()
+	# 	return ad
+
+
+class AdUpdateSerializer(serializers.ModelSerializer):
+	pk = serializers.IntegerField(read_only=True)
+	phone = serializers.CharField(source='author.phone')
+	author_first_name = serializers.CharField(source='author.first_name')
+	author_last_name = serializers.CharField(source='author.last_name')
 
 	class Meta:
 		model = Ad
@@ -73,45 +95,6 @@ class AdCreateSerializer(serializers.ModelSerializer):
 			'author_last_name',
 			'author_id',
 		]
-
-	# def is_valid(self, raise_exception=False):
-	# 	self._user = self.initial_data.pop('user', None)
-	# 	print(self.get_initial())
-	# 	return super().is_valid(raise_exception=raise_exception)
-
-	# def create(self, validated_data):
-	# 	ad = Ad.objects.create(**validated_data)
-	# 	# if self._category:
-	# 	# 	category_obj = Category.objects.get_or_create(name=self._category)[0]
-	# 	# 	ad.category = category_obj
-	# 	# 	ad.save()
-	# 	ad.save()
-	# 	return ad
-
-
-class AdUpdateSerializer(serializers.ModelSerializer):
-	id = serializers.IntegerField(read_only=True)
-	# category = serializers.SlugRelatedField(
-	# 	required=False,
-	# 	slug_field='name',
-	# 	queryset=Category.objects.all(),
-	# )
-
-	class Meta:
-		model = Ad
-		fields = '__all__'
-
-	# def is_valid(self, raise_exception=False):
-	# 	self._category = self.initial_data.pop('category', None)
-	# 	return super().is_valid(raise_exception=raise_exception)
-
-	def save(self):
-		ad = super().save()
-		# if self._category:
-		# 	category_obj = Category.objects.get_or_create(name=self._category)[0]
-		# 	ad.category = category_obj
-		# 	ad.save()
-		return ad
 
 
 class AdDestroySerializer(serializers.ModelSerializer):

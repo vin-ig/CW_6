@@ -13,9 +13,9 @@ from ad.serializers import AdListSerializer, AdCreateSerializer, AdUpdateSeriali
 	AdDetailSerializer
 
 
-#, SelectionListSerializer, \
-	# SelectionDetailSerializer, SelectionCreateSerializer, SelectionUpdateSerializer, SelectionDestroySerializer, \
-	# AdDestroySerializer
+# , SelectionListSerializer, \
+# SelectionDetailSerializer, SelectionCreateSerializer, SelectionUpdateSerializer, SelectionDestroySerializer, \
+# AdDestroySerializer
 
 
 # from user.serializers import UserDestroySerializer
@@ -60,7 +60,7 @@ class AdListView(ListAPIView):
 class AdDetailView(RetrieveAPIView):
 	queryset = Ad.objects.all()
 	serializer_class = AdDetailSerializer
-	# permission_classes = [IsAuthenticated]
+# permission_classes = [IsAuthenticated]
 
 
 class AdCreateView(CreateAPIView):
@@ -68,17 +68,23 @@ class AdCreateView(CreateAPIView):
 	serializer_class = AdCreateSerializer
 	permission_classes = [IsAuthenticated]
 
+	def perform_create(self, serializer):
+		serializer.save(author=self.request.user)
+
 
 class AdUpdateView(UpdateAPIView):
 	queryset = Ad.objects.all()
 	serializer_class = AdUpdateSerializer
-	permission_classes = [IsAuthenticated, AdActionsPermission]
+	permission_classes = [IsAuthenticated]  # , AdActionsPermission]
+
+	def perform_update(self, serializer):
+		serializer.save(author=self.request.user)
 
 
 class AdDeleteView(DestroyAPIView):
 	queryset = Ad.objects.all()
 	serializer_class = AdDestroySerializer
-	permission_classes = [IsAuthenticated, AdActionsPermission]
+# permission_classes = [IsAuthenticated, AdActionsPermission]
 
 
 @api_view(["POST"])
