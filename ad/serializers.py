@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework import serializers
 
 from ad.models import Ad, Comment
@@ -57,8 +59,11 @@ class AdCreateSerializer(serializers.ModelSerializer):
 			'author_id',
 		]
 
-	# def create(self, validated_data):
-	# 	print(validated_data)
+	def create(self, validated_data):
+		ad = Ad.objects.create(**validated_data)
+		ad.created_at = datetime.now()
+		ad.save()
+		return ad
 
 
 	# def is_valid(self, raise_exception=False):

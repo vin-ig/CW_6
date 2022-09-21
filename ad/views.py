@@ -105,3 +105,15 @@ def upload_image(request, pk):
 		'is_published': ad.is_published,
 		'category': ad.category.name,
 	}, safe=False)
+
+
+class MyAdsView(ListAPIView):
+	queryset = Ad.objects.filter(author=2)
+	serializer_class = AdListSerializer
+
+	def list(self, request, *args, **kwargs):
+		user_id = self.request.user.id
+		self.queryset = Ad.objects.filter(author=user_id)
+		return super().list(request, *args, **kwargs)
+
+
