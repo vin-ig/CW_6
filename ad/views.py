@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.generics import RetrieveAPIView, ListAPIView, CreateAPIView, DestroyAPIView, UpdateAPIView
 from django.views import View
@@ -6,11 +8,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.views.generic import UpdateView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
 
 from ad.models import Ad, Comment
 from ad.permissions import AdActionsPermission
 from ad.serializers import AdListSerializer, AdCreateSerializer, AdUpdateSerializer, AdDestroySerializer, \
-	AdDetailSerializer
+	AdDetailSerializer, CommentListSerializer
 
 
 # , SelectionListSerializer, \
@@ -31,30 +34,30 @@ class AdListView(ListAPIView):
 	queryset = Ad.objects.all()
 	serializer_class = AdListSerializer
 
-	def get(self, request, *args, **kwargs):
-		# Фильтр по категории
-		cat_filter = request.GET.getlist('cat')
-		if cat_filter:
-			self.queryset = self.queryset.filter(category_id__in=cat_filter)
-
-		# Поиск по тексту
-		search_text = request.GET.get('text')
-		if search_text:
-			self.queryset = self.queryset.filter(name__icontains=search_text)
-
-		# Поиск по городу
-		location = request.GET.get('location')
-		if location:
-			self.queryset = self.queryset.filter(author__location__name__icontains=location)
-
-		# Диапазон цен
-		price_from, price_to = request.GET.get('price_from', ), request.GET.get('price_to')
-		if price_from:
-			self.queryset = self.queryset.filter(price__gte=price_from)
-		if price_to:
-			self.queryset = self.queryset.filter(price__lte=price_to)
-
-		return super().get(request, *args, **kwargs)
+	# def get(self, request, *args, **kwargs):
+	# 	# Фильтр по категории
+	# 	cat_filter = request.GET.getlist('cat')
+	# 	if cat_filter:
+	# 		self.queryset = self.queryset.filter(category_id__in=cat_filter)
+	#
+	# 	# Поиск по тексту
+	# 	search_text = request.GET.get('text')
+	# 	if search_text:
+	# 		self.queryset = self.queryset.filter(name__icontains=search_text)
+	#
+	# 	# Поиск по городу
+	# 	location = request.GET.get('location')
+	# 	if location:
+	# 		self.queryset = self.queryset.filter(author__location__name__icontains=location)
+	#
+	# 	# Диапазон цен
+	# 	price_from, price_to = request.GET.get('price_from', ), request.GET.get('price_to')
+	# 	if price_from:
+	# 		self.queryset = self.queryset.filter(price__gte=price_from)
+	# 	if price_to:
+	# 		self.queryset = self.queryset.filter(price__lte=price_to)
+	#
+	# 	return super().get(request, *args, **kwargs)
 
 
 class AdDetailView(RetrieveAPIView):
@@ -117,3 +120,48 @@ class MyAdsView(ListAPIView):
 		return super().list(request, *args, **kwargs)
 
 
+# class CommentListView(ListAPIView):
+# 	queryset = Comment.objects.all()
+# 	serializer_class = CommentListSerializer
+#
+# 	def list(self, request, *args, **kwargs):
+# 		self.queryset = Comment.objects.filter(ad=self.kwargs['pk'])
+# 		return super().list(request, *args, **kwargs)
+#
+#
+# class CommentCreateView(CreateAPIView):
+# 	queryset = Comment.objects.all()
+# 	serializer_class = CommentListSerializer
+#
+# 	def list(self, request, *args, **kwargs):
+# 		self.queryset = Comment.objects.filter(ad=self.kwargs['pk'])
+# 		return super().list(request, *args, **kwargs)
+
+class CommentViewSet(ModelViewSet):
+	queryset = Comment.objects.all()
+	serializer_class = CommentListSerializer
+
+	def list(self, request, *args, **kwargs):
+		self.queryset = Comment.objects.filter(ad=self.kwargs['ad_pk'])
+		return super().list(request, *args, **kwargs)
+
+	def retrieve(self, request, *args, **kwargs):
+		self.queryset = Comment.objects.filter(ad=self.kwargs['ad_pk'])
+		return super().retrieve(request, *args, **kwargs)
+
+	def perform_create(self, serializer):
+		serializer.save(
+			author=self.request.user,
+			created_at=datetime.datetime.now(),
+			ad_id=self.kwargs['ad_pk']
+		)
+
+	def perform_update(self, serializer):
+		serializer.save(
+			author=self.request.user,
+			ad_id=self.kwargs['ad_pk']
+		)
+
+	def destroy(self, request, *args, **kwargs):
+		self.queryset = Comment.objects.filter(ad=self.kwargs['ad_pk'])
+		return super().destroy(request, *args, **kwargs)

@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models import CASCADE
@@ -26,7 +28,7 @@ class Comment(models.Model):
 	text = models.CharField(max_length=1000)
 	author = models.ForeignKey(User, on_delete=CASCADE)
 	ad = models.ForeignKey(Ad, on_delete=CASCADE)
-	created_at = models.DateTimeField()
+	created_at = models.DateTimeField(null=True)
 
 	class Meta:
 		verbose_name = 'Отзыв'

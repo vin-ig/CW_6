@@ -63,22 +63,8 @@ class AdCreateSerializer(serializers.ModelSerializer):
 		ad = Ad.objects.create(**validated_data)
 		ad.created_at = datetime.now()
 		ad.save()
+
 		return ad
-
-
-	# def is_valid(self, raise_exception=False):
-	# 	self._user = self.initial_data.pop('user', None)
-	# 	print(self.get_initial())
-	# 	return super().is_valid(raise_exception=raise_exception)
-
-	# def create(self, validated_data):
-	# 	ad = Ad.objects.create(**validated_data)
-	# 	if self._category:
-	# 		category_obj = Category.objects.get_or_create(name=self._category)[0]
-	# 		ad.category = category_obj
-	# 		ad.save()
-	# 	ad.save()
-	# 	return ad
 
 
 class AdUpdateSerializer(serializers.ModelSerializer):
@@ -108,44 +94,30 @@ class AdDestroySerializer(serializers.ModelSerializer):
 		fields = ['id']
 
 
-# class SelectionListSerializer(serializers.ModelSerializer):
-# 	class Meta:
-# 		model = Selection
-# 		fields = ['id', 'name']
-#
-#
-# class SelectionDetailSerializer(serializers.ModelSerializer):
-# 	owner = serializers.SlugRelatedField(
-# 		read_only=True,
-# 		slug_field='email'
-# 	)
-# 	items = AdSerializer(
-# 		read_only=True,
-# 		many=True
-# 	)
-#
-# 	class Meta:
-# 		model = Selection
-# 		fields = '__all__'
-#
-#
-# class SelectionCreateSerializer(serializers.ModelSerializer):
-# 	id = serializers.IntegerField(read_only=True)
-#
-# 	class Meta:
-# 		model = Selection
-# 		fields = '__all__'
-#
-#
-# class SelectionUpdateSerializer(serializers.ModelSerializer):
-# 	id = serializers.IntegerField(read_only=True)
-#
-# 	class Meta:
-# 		model = Selection
-# 		fields = '__all__'
-#
-#
-# class SelectionDestroySerializer(serializers.ModelSerializer):
-# 	class Meta:
-# 		model = Selection
-# 		fields = ['id']
+class CommentListSerializer(serializers.ModelSerializer):
+	pk = serializers.IntegerField(read_only=True)
+	# created_at = serializers.DateField(required=False)
+	ad_id = serializers.CharField(source='ad.pk', required=False)
+	author_id = serializers.CharField(source='author.pk', required=False)
+	author_first_name = serializers.CharField(source='author.first_name', required=False)
+	author_last_name = serializers.CharField(source='author.last_name', required=False)
+	# author_image = serializers.CharField(source='author.author_image', required=False)
+
+	class Meta:
+		model = Comment
+		fields = [
+			'pk',
+			'text',
+			'created_at',
+			'ad_id',
+			'author_id',
+			'author_first_name',
+			'author_last_name',
+			# 'author_image',
+		]
+
+	# def create(self, validated_data):
+	# 	comment = Comment.objects.create(**validated_data)
+	# 	comment.created_at = datetime.now()
+	# 	comment.save()
+	# 	return comment
