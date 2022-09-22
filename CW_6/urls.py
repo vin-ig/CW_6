@@ -8,24 +8,24 @@ from django.urls import include, path
 from djoser.views import UserViewSet
 from rest_framework.routers import SimpleRouter
 
-import ad.views
 from CW_6 import settings
 from ad import views
-# from user.views import LocationViewSet
+
+ads_router = routers.SimpleRouter()
+ads_router.register('ads', views.AdViewSet)
+
+users_router = SimpleRouter()
+users_router.register("api/api/users", UserViewSet, basename="users")
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('api/api/ads/', include('ad.urls')),
 
-	# path('', ad.views.IndexView.as_view()),
-	# path('cat/', include('category.urls')),
-	# path('users/', include('users.urls')),
+    path('', include(users_router.urls)),
+    path('api/api/', include(ads_router.urls)),
 
-	# path('selection/', views.SelectionListView.as_view(), name='selection_list'),
-	# path('selection/<int:pk>/', views.SelectionDetailView.as_view(), name='selection_detail'),
-	# path('selection/create/', views.SelectionCreateView.as_view(), name='selection_create'),
-	# path('selection/<int:pk>/update/', views.SelectionUpdateView.as_view(), name='selection_update'),
-	# path('selection/<int:pk>/delete/', views.SelectionDestroyView.as_view(), name='selection_delete'),
+	path('token/', TokenObtainPairView.as_view()),
+	path('token/refresh/', TokenRefreshView.as_view()),
 
 	path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 	path('api/schema/swagger-ui', SpectacularSwaggerView.as_view(url_name='schema')),
@@ -35,12 +35,3 @@ urlpatterns = [
 
 if settings.DEBUG:
 	urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-users_router = SimpleRouter()
-users_router.register("api/api/users", UserViewSet, basename="users")
-urlpatterns += [
-    path('', include(users_router.urls)),
-	path('token/', TokenObtainPairView.as_view()),
-	path('token/refresh/', TokenRefreshView.as_view()),
-]

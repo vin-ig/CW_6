@@ -1,15 +1,11 @@
-from datetime import datetime
-
 from rest_framework import serializers
-
 from ad.models import Ad, Comment
-from users.models import User
 
 
-class IsPublishedValidator:
-	def __call__(self, value):
-		if value:
-			raise serializers.ValidationError("The value of the 'is_published' field cannot be True.")
+class AdSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Ad
+		fields = '__all__'
 
 
 class AdListSerializer(serializers.ModelSerializer):
@@ -59,13 +55,6 @@ class AdCreateSerializer(serializers.ModelSerializer):
 			'author_id',
 		]
 
-	def create(self, validated_data):
-		ad = Ad.objects.create(**validated_data)
-		ad.created_at = datetime.now()
-		ad.save()
-
-		return ad
-
 
 class AdUpdateSerializer(serializers.ModelSerializer):
 	pk = serializers.IntegerField(read_only=True)
@@ -94,14 +83,13 @@ class AdDestroySerializer(serializers.ModelSerializer):
 		fields = ['id']
 
 
-class CommentListSerializer(serializers.ModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
 	pk = serializers.IntegerField(read_only=True)
-	# created_at = serializers.DateField(required=False)
 	ad_id = serializers.CharField(source='ad.pk', required=False)
 	author_id = serializers.CharField(source='author.pk', required=False)
 	author_first_name = serializers.CharField(source='author.first_name', required=False)
 	author_last_name = serializers.CharField(source='author.last_name', required=False)
-	# author_image = serializers.CharField(source='author.author_image', required=False)
+	author_image = serializers.CharField(source='author.image', required=False)
 
 	class Meta:
 		model = Comment
@@ -113,11 +101,5 @@ class CommentListSerializer(serializers.ModelSerializer):
 			'author_id',
 			'author_first_name',
 			'author_last_name',
-			# 'author_image',
+			'author_image',
 		]
-
-	# def create(self, validated_data):
-	# 	comment = Comment.objects.create(**validated_data)
-	# 	comment.created_at = datetime.now()
-	# 	comment.save()
-	# 	return comment
