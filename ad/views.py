@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from ad.models import Ad, Comment
-from ad.permissions import AdActionsPermission
+from ad.permissions import IsOwnerOrAdmin
 from ad.serializers import AdListSerializer, AdCreateSerializer, AdUpdateSerializer, AdDestroySerializer, \
 	AdDetailSerializer, CommentSerializer, AdSerializer
 
@@ -61,6 +61,11 @@ class AdViewSet(ModelViewSet):
 
 	def perform_update(self, serializer):
 		serializer.save(author=self.request.user)
+
+	def get_permissions(self):
+		if self.action == 'retrieve':
+			self.permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
+		return super().get_permissions()
 
 
 class MyAdsView(ListAPIView):

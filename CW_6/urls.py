@@ -15,17 +15,17 @@ ads_router = routers.SimpleRouter()
 ads_router.register('ads', views.AdViewSet)
 
 users_router = SimpleRouter()
-users_router.register("api/api/users", UserViewSet, basename="users")
+users_router.register("users", UserViewSet, basename="users")
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
-	path('api/api/ads/', include('ad.urls')),
+	path('api/ads/', include('ad.urls')),
 
-    path('', include(users_router.urls)),
-    path('api/api/', include(ads_router.urls)),
+    path('api/', include(users_router.urls)),
+    path('api/', include(ads_router.urls)),
 
-	path('token/', TokenObtainPairView.as_view()),
-	path('token/refresh/', TokenRefreshView.as_view()),
+	path('api/token/', TokenObtainPairView.as_view()),
+	path('api/refresh/', TokenRefreshView.as_view()),
 
 	path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 	path('api/schema/swagger-ui', SpectacularSwaggerView.as_view(url_name='schema')),

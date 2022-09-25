@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 from ad.models import Ad
-from users.models import User
+from users.models import User, UserRoles
 
 
 # class SelectionActionsPermission(BasePermission):
@@ -16,7 +16,7 @@ from users.models import User
 # 		return request.user.id == selection.owner.id
 
 
-class AdActionsPermission(BasePermission):
+class IsOwnerOrAdmin(BasePermission):
 	message = 'You do not have permission to do this'
 
 	def has_permission(self, request, view):
@@ -27,6 +27,6 @@ class AdActionsPermission(BasePermission):
 
 		if request.user.id == ad.author.id:
 			return True
-		elif request.user.role in {User.MODERATOR, User.ADMIN}:
+		elif request.user.role == UserRoles.ADMIN.value:
 			return True
 		return False
