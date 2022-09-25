@@ -2,6 +2,7 @@
 postgres_data/
 skymarket/
 tests/
+node_modules/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

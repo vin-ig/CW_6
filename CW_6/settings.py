@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'djoser',
+	'django_filters',
 	'rest_framework',
 	'rest_framework_simplejwt',
 	'ad',
@@ -160,7 +161,11 @@ DJOSER = {
     'LOGIN_FIELD': 'email'
 }
 
-# Удалить
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:3000",
+]
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=50000),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=5000),
 }

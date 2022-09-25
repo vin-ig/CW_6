@@ -13,10 +13,6 @@ class UserRoles(enum.Enum):
 
 
 class UserManager(BaseUserManager):
-	"""
-	функция создания пользователя — в нее мы передаем обязательные поля
-	"""
-
 	def create_user(self, email, first_name, last_name, phone, role, password=None):
 		if not email:
 			raise ValueError('Users must have an email address')
@@ -34,11 +30,6 @@ class UserManager(BaseUserManager):
 		return user
 
 	def create_superuser(self, email, first_name, last_name, phone, role, password=None):
-		"""
-		функция для создания суперпользователя — с ее помощью мы создаем админинстратора
-		это можно сделать с помощью команды createsuperuser
-		"""
-
 		user = self.create_user(
 			email,
 			first_name=first_name,
@@ -58,7 +49,7 @@ class User(AbstractBaseUser):
 		(UserRoles.ADMIN.value, 'Администратор'),
 	]
 
-	role = models.CharField(max_length=9, choices=ROLES)
+	role = models.CharField(max_length=9, choices=ROLES, default=UserRoles.USER.value)
 	email = models.EmailField(unique=True)
 	phone = models.CharField(max_length=12)
 	first_name = models.CharField(max_length=50, blank=True)

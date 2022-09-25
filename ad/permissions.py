@@ -1,19 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 from ad.models import Ad
-from users.models import User, UserRoles
-
-
-# class SelectionActionsPermission(BasePermission):
-# 	message = 'You do not have permission to do this'
-#
-# 	def has_permission(self, request, view):
-# 		try:
-# 			selection = Selection.objects.get(id=view.kwargs['pk'])
-# 		except Selection.DoesNotExist:
-# 			return False
-#
-# 		return request.user.id == selection.owner.id
+from users.models import UserRoles
 
 
 class IsOwnerOrAdmin(BasePermission):

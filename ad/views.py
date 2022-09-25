@@ -1,42 +1,21 @@
 import datetime
 
-from rest_framework.decorators import permission_classes, api_view
-from rest_framework.generics import RetrieveAPIView, ListAPIView, CreateAPIView, DestroyAPIView, UpdateAPIView
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
-from django.views.generic import UpdateView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
+from ad.filters import AdFilter
 from ad.models import Ad, Comment
 from ad.permissions import IsOwnerOrAdmin
 from ad.serializers import AdListSerializer, AdCreateSerializer, AdUpdateSerializer, AdDestroySerializer, \
 	AdDetailSerializer, CommentSerializer, AdSerializer
 
 
-# @api_view(["POST"])
-# @permission_classes([IsAuthenticated, AdActionsPermission])
-# def upload_image(request, pk):
-# 	ad = Ad.objects.get(pk=pk)
-#
-# 	ad.image = request.FILES['image']
-# 	ad.save()
-#
-# 	return JsonResponse({
-# 		'id': ad.id,
-# 		'name': ad.name,
-# 		'author': ad.author.username,
-# 		'price': ad.price,
-# 		'description': ad.description,
-# 		'image': ad.image.url if ad.image else None,
-# 		'is_published': ad.is_published,
-# 		'category': ad.category.name,
-# 	}, safe=False)
-
-
 class AdViewSet(ModelViewSet):
+	filter_backends = (DjangoFilterBackend,)
+	filterset_class = AdFilter
+
 	queryset = Ad.objects.all()
 	serializer_class = AdSerializer
 	serializer_action_classes = {
@@ -63,7 +42,7 @@ class AdViewSet(ModelViewSet):
 		serializer.save(author=self.request.user)
 
 	def get_permissions(self):
-		if self.action == 'retrieve':
+		if self.action in {'retrieve', 'create', 'partial-update', 'delete'}:
 			self.permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
 		return super().get_permissions()
 
