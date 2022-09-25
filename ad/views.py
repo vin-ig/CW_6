@@ -42,7 +42,9 @@ class AdViewSet(ModelViewSet):
 		serializer.save(author=self.request.user)
 
 	def get_permissions(self):
-		if self.action in {'retrieve', 'create', 'partial-update', 'delete'}:
+		if self.action in {'create', 'retrieve'}:
+			self.permission_classes = [IsAuthenticated]
+		elif self.action in {'partial-update', 'delete'}:
 			self.permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
 		return super().get_permissions()
 
